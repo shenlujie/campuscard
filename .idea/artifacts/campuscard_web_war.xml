@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="campuscard-web:war">
+    <output-path>$PROJECT_DIR$/campuscard-web/target</output-path>
+    <root id="archive" name="campuscard.war">
+      <element id="artifact" artifact-name="campuscard-web:war exploded" />
+    </root>
+  </artifact>
+</component>

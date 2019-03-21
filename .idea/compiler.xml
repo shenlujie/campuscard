@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="campuscard-dao" />
+        <module name="campuscard-domain" />
+        <module name="campuscard-service" />
+        <module name="campuscard-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="campuscard" target="1.8" />
+      <module name="campuscard-dao" target="1.8" />
+      <module name="campuscard-domain" target="1.8" />
+      <module name="campuscard-service" target="1.8" />
+      <module name="campuscard-web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

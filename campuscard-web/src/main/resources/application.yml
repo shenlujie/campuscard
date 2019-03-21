@@ -1,0 +1,11 @@
+spring:
+  datasource:
+#   数据源类型druid
+    type: com.alibaba.druid.pool.DruidDataSource
+#   数据库连接信息
+    username: root
+    password: "025614"
+    url: jdbc:mysql://139.199.25.59:3306/campuscard?characterEncoding=UTF-8&useServerPrepStmts=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.jdbc.Driver
+mapper:
+  mappers: org.slj.MyMapper
