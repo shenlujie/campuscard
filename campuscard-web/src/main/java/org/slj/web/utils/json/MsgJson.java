@@ -36,6 +36,11 @@ public class MsgJson implements Serializable{
     private Object obj = null;
 
     /**
+     * 数据总数
+     */
+    private int count = 0;
+
+    /**
      * 数据返回成功
      * @param data 返回的数据本体
      * @return this
@@ -154,6 +159,15 @@ public class MsgJson implements Serializable{
 
     public MsgJson setObj(Object obj) {
         this.obj = obj;
+        return this;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public MsgJson setCount(int count) {
+        this.count = count;
         return this;
     }
 }

@@ -8,4 +8,11 @@ import org.slj.domain.BackUserAdministrator;
 */
 public interface BackUserAdministratorService extends Service<BackUserAdministrator> {
 
+    /**
+     * 验证用户名是否存在
+     * @param username 用户名
+     * @return 管理员实体类
+     */
+    BackUserAdministrator checkUsername(String username);
+
 }

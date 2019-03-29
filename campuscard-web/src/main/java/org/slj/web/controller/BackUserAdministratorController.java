@@ -3,6 +3,7 @@ package org.slj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slj.domain.BackUserAdministrator;
+import org.slj.enums.EmCode;
 import org.slj.service.BackUserAdministratorService;
 import org.slj.web.utils.json.MsgJson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -61,5 +62,21 @@ public class BackUserAdministratorController {
         List<BackUserAdministrator> list = backUserAdministratorService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return list.toString();
+    }
+
+    @RequestMapping(value = "login",method = RequestMethod.POST)
+    public String login(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password
+    , HttpSession session){
+        MsgJson msgJson = new MsgJson();
+        BackUserAdministrator backUserAdministrator = backUserAdministratorService.checkUsername(username);
+        if (null == backUserAdministrator){
+            msgJson.setSuccess(false).setCode(EmCode.SUCCESS.getCode()).setMsg("该用户不存在");
+        }else if (!password.equals(backUserAdministrator.getAdPassword())){
+            msgJson.setSuccess(false).setCode(EmCode.SUCCESS.getCode()).setMsg("密码不正确");
+        }else {
+            msgJson.setSuccess(true);
+            session.setAttribute("backUserAdministrator", backUserAdministrator);
+        }
+        return msgJson.toJson();
     }
 }
