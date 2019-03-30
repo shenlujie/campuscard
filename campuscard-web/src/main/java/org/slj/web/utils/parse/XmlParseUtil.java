@@ -1,4 +1,4 @@
-package org.slj.web.utils.xmlparse;
+package org.slj.web.utils.parse;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;

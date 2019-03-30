@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slj.web.utils.parse.TxtParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -27,6 +28,13 @@ public class CampuscardWebApplicationTests {
         LOG.warn("是否乱码");
         LOG.error("是否乱码");
         LOG.debug("是否乱码");
+
+        String fileName = "campuscard-introduce.txt";
+        String res = TxtParseUtil.readFile(fileName);
+        LOG.info(res);
+
+        boolean result = TxtParseUtil.writeFile(fileName, "hahahah");
+        LOG.info(String.valueOf(result));
     }
 
 }

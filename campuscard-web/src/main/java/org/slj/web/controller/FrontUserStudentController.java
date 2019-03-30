@@ -82,16 +82,16 @@ public class FrontUserStudentController {
         String stDepartment = request.getParameter("stDepartment");
         String stMajor = request.getParameter("stMajor");
         if (!StringUtils.isEmpty(stNum)){
-            criteria.andEqualTo("stNum", stNum);
+            criteria.andLike("stNum", "%" + stNum + "%");
         }
         if (!StringUtils.isEmpty(stName)){
-            criteria.andEqualTo("stName", stName);
+            criteria.andLike("stName", "%" + stName + "%");
         }
         if (!StringUtils.isEmpty(stDepartment)){
-            criteria.andEqualTo("stDepartment", stDepartment);
+            criteria.andLike("stDepartment", "%" + stDepartment + "%");
         }
         if (!StringUtils.isEmpty(stMajor)){
-            criteria.andEqualTo("stMajor", stMajor);
+            criteria.andLike("stMajor", "%" + stMajor + "%");
         }
         List<FrontUserStudent> list = frontUserStudentService.findByCondition(condition);
         PageInfo pageInfo = new PageInfo(list);
