@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slj.service.SendMessageService;
 import org.slj.web.utils.parse.TxtParseUtil;
+import org.slj.web.utils.sensitive.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,7 +34,21 @@ public class CampuscardWebApplicationTests {
 
     @Test
     public void contextLoads() {
-        sendMessageService.sendMessage(FROM, TO, TITLE, CONTENT);
+        // 使用默认单例（加载默认词典）
+        SensitiveFilter filter = new SensitiveFilter();
+        // 向过滤器增加一个词
+        //filter.put("婚礼上唱春天在哪里");
+
+        // 待过滤的句子
+        String sentence = "然后，市长在婚礼上唱春天在哪里。";
+        // 进行过滤
+        String filted = filter.filter(sentence, '*');
+
+        // 如果未过滤，则返回输入的String引用
+        if(sentence != filted){
+            // 句子中有敏感词
+            System.out.println(filted);
+        }
     }
 
 }
