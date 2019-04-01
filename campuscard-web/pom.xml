@@ -69,6 +69,12 @@
             <version>1.6.1</version>
         </dependency>
 
+        <!--发送邮件功能-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
 
         <!--模块依赖-->
         <dependency>

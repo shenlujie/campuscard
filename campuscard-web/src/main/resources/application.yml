@@ -7,6 +7,15 @@ spring:
     password: "025614"
     url: jdbc:mysql://139.199.25.59:3306/campuscard?characterEncoding=UTF-8&useServerPrepStmts=true&rewriteBatchedStatements=true
     driver-class-name: com.mysql.jdbc.Driver
+  mail:
+    host: smtp.163.com
+    username: 18234175208@163.com
+    password: 'JayBryant5201314'
+    port: 25
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.socketFactory.fallback : true
+      mail.smtp.starttls.enable: true
 mapper:
   mappers: org.slj.MyMapper
 

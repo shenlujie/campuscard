@@ -12,8 +12,8 @@ public class CampusCardLost {
     /**
      * 上传用户id
      */
-    @Column(name = "up_st_id")
-    private Integer upStId;
+    @Column(name = "up_st_num")
+    private Integer upStNum;
 
     /**
      * 失者学号
@@ -46,6 +46,12 @@ public class CampusCardLost {
     private String upStTel;
 
     /**
+     * 管理员推送状态
+     */
+    @Column(name = "status")
+    private int status;
+
+    /**
      * @return id
      */
     public Integer getId() {
@@ -64,17 +70,17 @@ public class CampusCardLost {
      *
      * @return up_st_id - 上传用户id
      */
-    public Integer getUpStId() {
-        return upStId;
+    public Integer getUpStNum() {
+        return upStNum;
     }
 
     /**
      * 设置上传用户id
      *
-     * @param upStId 上传用户id
+     * @param upStNum 上传用户id
      */
-    public void setUpStId(Integer upStId) {
-        this.upStId = upStId;
+    public void setUpStNum(Integer upStNum) {
+        this.upStNum = upStNum;
     }
 
     /**
@@ -165,5 +171,23 @@ public class CampusCardLost {
      */
     public void setUpStTel(String upStTel) {
         this.upStTel = upStTel;
+    }
+
+    /**
+     * 获取管理员推送状态
+     *
+     * @return status - 管理员推送状态
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * 设置管理员推送状态
+     *
+     * @param status 管理员推送状态
+     */
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -41,7 +41,8 @@ public class BackUserAdministratorController {
     @RequestMapping(value = "update",method = RequestMethod.PUT)
     public String update(BackUserAdministrator backUserAdministrator) {
 	    backUserAdministratorService.update(backUserAdministrator);
-	    return "";
+	    MsgJson msgJson = MsgJson.success("修改成功");
+	    return msgJson.toJson();
     }
 
     @RequestMapping(value = "detail",method = RequestMethod.GET)

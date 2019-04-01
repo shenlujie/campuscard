@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slj.service.SendMessageService;
 import org.slj.web.utils.parse.TxtParseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,19 +23,17 @@ public class CampuscardWebApplicationTests {
      */
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
+    private final String FROM = "18234175208@163.com";
+    private final String TO = "528805688@qq.com";
+    private final String TITLE = "简单邮件";
+    private final String CONTENT = "为什么nuc邮箱发不过去";
+
+    @Autowired
+    SendMessageService sendMessageService;
+
     @Test
-    public void contextLoads() throws SQLException {
-        LOG.info("是否乱码");
-        LOG.warn("是否乱码");
-        LOG.error("是否乱码");
-        LOG.debug("是否乱码");
-
-        String fileName = "campuscard-introduce.txt";
-        String res = TxtParseUtil.readFile(fileName);
-        LOG.info(res);
-
-        boolean result = TxtParseUtil.writeFile(fileName, "hahahah");
-        LOG.info(String.valueOf(result));
+    public void contextLoads() {
+        sendMessageService.sendMessage(FROM, TO, TITLE, CONTENT);
     }
 
 }
