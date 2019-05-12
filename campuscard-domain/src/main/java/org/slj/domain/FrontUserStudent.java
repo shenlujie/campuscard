@@ -2,6 +2,11 @@ package org.slj.domain;
 
 import javax.persistence.*;
 
+/**
+ * @Description: 前台用户
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "front_user_student")
 public class FrontUserStudent {
     @Id
@@ -49,6 +54,12 @@ public class FrontUserStudent {
      */
     @Column(name = "st_password")
     private String stPassword;
+
+    /**
+     * 角色id
+     */
+    @Column(name = "role_id")
+    private int roleId;
 
     /**
      * @return id
@@ -188,5 +199,23 @@ public class FrontUserStudent {
      */
     public void setStPassword(String stPassword) {
         this.stPassword = stPassword;
+    }
+
+    /**
+     * 获取角色id
+     *
+     * @return roleId - 角色id
+     */
+    public int getRoleId() {
+        return roleId;
+    }
+
+    /**
+     * 设置角色id
+     *
+     * @param roleId 角色id
+     */
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 }

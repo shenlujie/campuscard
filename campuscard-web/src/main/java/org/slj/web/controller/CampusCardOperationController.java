@@ -3,6 +3,7 @@ package org.slj.web.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slj.domain.CampusCardOperation;
+import org.slj.enums.EmCode;
 import org.slj.service.CampusCardOperationService;
 import org.slj.service.FrontUserStudentService;
 import org.slj.service.SendMessageService;
@@ -88,7 +89,13 @@ public class CampusCardOperationController {
         PageHelper.startPage(page, size);
         List<CampusCardOperation> list = campusCardOperationService.findAll();
         PageInfo pageInfo = new PageInfo(list);
-        return list.toString();
+        MsgJson msgJson = new MsgJson();
+        msgJson.setSuccess(true)
+                .setCode(EmCode.SUCCESS.getCode())
+                .setMsg(EmCode.SUCCESS.getMsg())
+                .setCount(list.size())
+                .setObj(list);
+        return msgJson.toJson();
     }
 
     @RequestMapping(value = "/sendMessage",method = RequestMethod.POST)

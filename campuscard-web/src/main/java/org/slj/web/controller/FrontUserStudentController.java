@@ -18,13 +18,14 @@ import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
-*@Description: 前台学生用户
-*@create: 2019/3/17
-*@Author: SLJ
-*/
+ * @Description: 前台学生用户
+ * @create: 2019/3/17
+ * @Author: SLJ
+ */
 @RestController
 @RequestMapping("/frontUserStudent/")
 public class FrontUserStudentController {
@@ -37,43 +38,43 @@ public class FrontUserStudentController {
     @Autowired
     FrontUserStudentService frontUserStudentService;
 
-    @RequestMapping(value = "add",method = RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add(FrontUserStudent frontUserStudent) {
         MsgJson msgJson;
         frontUserStudentService.saveModel(frontUserStudent);
         return "";
     }
 
-    @RequestMapping(value = "delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
     public String delete(@RequestParam Integer id) {
         MsgJson msgJson;
-	    frontUserStudentService.deleteById(id);
-	    return "";
+        frontUserStudentService.deleteById(id);
+        return "";
     }
 
-    @RequestMapping(value = "update",method = RequestMethod.PUT)
+    @RequestMapping(value = "update", method = RequestMethod.PUT)
     public String update(FrontUserStudent frontUserStudent) {
-	    frontUserStudentService.update(frontUserStudent);
-	    MsgJson msgJson = MsgJson.success("修改成功");
-	    return msgJson.toJson();
+        frontUserStudentService.update(frontUserStudent);
+        MsgJson msgJson = MsgJson.success("修改成功");
+        return msgJson.toJson();
     }
 
-    @RequestMapping(value = "detail",method = RequestMethod.GET)
+    @RequestMapping(value = "detail", method = RequestMethod.GET)
     public String detail(@RequestParam Integer id) {
         MsgJson msgJson;
         FrontUserStudent frontUserStudent = frontUserStudentService.findById(id);
-        if (null == frontUserStudent){
+        if (null == frontUserStudent) {
             msgJson = MsgJson.not_found("无");
-        }else {
+        } else {
             msgJson = MsgJson.success(frontUserStudent);
         }
         return msgJson.toJson();
     }
 
-    @RequestMapping(value = "listByCondition",method = RequestMethod.GET)
+    @RequestMapping(value = "listByCondition", method = RequestMethod.GET)
     public String listByCondition(@RequestParam(defaultValue = "0") Integer page
             , @RequestParam(defaultValue = "0") Integer limit
-            , HttpServletRequest request){
+            , HttpServletRequest request) {
         PageHelper.startPage(page, limit);
         Condition condition = new Condition(FrontUserStudent.class);
         Example.Criteria criteria = condition.createCriteria();
@@ -81,16 +82,16 @@ public class FrontUserStudentController {
         String stName = request.getParameter("stName");
         String stDepartment = request.getParameter("stDepartment");
         String stMajor = request.getParameter("stMajor");
-        if (!StringUtils.isEmpty(stNum)){
+        if (!StringUtils.isEmpty(stNum)) {
             criteria.andLike("stNum", "%" + stNum + "%");
         }
-        if (!StringUtils.isEmpty(stName)){
+        if (!StringUtils.isEmpty(stName)) {
             criteria.andLike("stName", "%" + stName + "%");
         }
-        if (!StringUtils.isEmpty(stDepartment)){
+        if (!StringUtils.isEmpty(stDepartment)) {
             criteria.andLike("stDepartment", "%" + stDepartment + "%");
         }
-        if (!StringUtils.isEmpty(stMajor)){
+        if (!StringUtils.isEmpty(stMajor)) {
             criteria.andLike("stMajor", "%" + stMajor + "%");
         }
         List<FrontUserStudent> list = frontUserStudentService.findByCondition(condition);
@@ -99,8 +100,24 @@ public class FrontUserStudentController {
         msgJson.setSuccess(true)
                 .setCode(EmCode.SUCCESS.getCode())
                 .setMsg(EmCode.SUCCESS.getMsg())
-                .setCount((int)pageInfo.getTotal())
+                .setCount((int) pageInfo.getTotal())
                 .setObj(list);
+        return msgJson.toJson();
+    }
+
+    @RequestMapping(value = "login", method = RequestMethod.POST)
+    public String login(@RequestParam(value = "stNum") String stNum, @RequestParam(value = "stPassword") String stPassword
+    ) {
+        MsgJson msgJson = new MsgJson();
+        FrontUserStudent frontUserStudent = frontUserStudentService.checkUsername(stNum);
+        if (null == frontUserStudent) {
+            msgJson.setSuccess(false).setCode(EmCode.SUCCESS.getCode()).setMsg("该用户不存在");
+        } else if (!stPassword.equals(frontUserStudent.getStPassword())) {
+            msgJson.setSuccess(false).setCode(EmCode.SUCCESS.getCode()).setMsg("密码不正确");
+        } else {
+            msgJson.setSuccess(true);
+            // 登录成功，返回token
+        }
         return msgJson.toJson();
     }
 }

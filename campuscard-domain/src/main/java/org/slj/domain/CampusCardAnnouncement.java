@@ -3,6 +3,11 @@ package org.slj.domain;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * @Description: 一卡通公告
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "campus_card_announcement")
 public class CampusCardAnnouncement {
     @Id

@@ -4,6 +4,11 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * @Description: 消费详情
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "consume_term_detail")
 public class ConsumeTermDetail {
     @Id

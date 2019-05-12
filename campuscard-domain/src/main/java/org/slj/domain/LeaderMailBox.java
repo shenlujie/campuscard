@@ -2,6 +2,11 @@ package org.slj.domain;
 
 import javax.persistence.*;
 
+/**
+ * @Description: 领导邮箱
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "leader_mailbox")
 public class LeaderMailBox {
     @Id

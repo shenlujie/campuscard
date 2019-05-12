@@ -2,6 +2,11 @@ package org.slj.domain;
 
 import javax.persistence.*;
 
+/**
+ * @Description: 后台管理员
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "back_user_administrator")
 public class BackUserAdministrator {
     @Id
@@ -31,6 +36,12 @@ public class BackUserAdministrator {
      */
     @Column(name = "tel_num")
     private String telNum;
+
+    /**
+     * 角色id
+     */
+    @Column(name = "role_id")
+    private int roleId;
 
     /**
      * @return id
@@ -116,5 +127,23 @@ public class BackUserAdministrator {
      */
     public void setTelNum(String telNum) {
         this.telNum = telNum;
+    }
+
+    /**
+     * 获取角色id
+     *
+     * @return roleId - 角色id
+     */
+    public int getRoleId() {
+        return roleId;
+    }
+
+    /**
+     * 设置角色id
+     *
+     * @param roleId 角色id
+     */
+    public void setRoleId(int roleId) {
+        this.roleId = roleId;
     }
 }

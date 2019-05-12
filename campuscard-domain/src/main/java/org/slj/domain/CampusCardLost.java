@@ -3,6 +3,11 @@ package org.slj.domain;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * @Description: 失卡招领
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "campus_card_lost")
 public class CampusCardLost {
     @Id

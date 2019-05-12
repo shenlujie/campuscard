@@ -2,6 +2,11 @@ package org.slj.domain;
 
 import javax.persistence.*;
 
+/**
+ * @Description: 业务办理
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "campus_card_operation")
 public class CampusCardOperation {
     @Id

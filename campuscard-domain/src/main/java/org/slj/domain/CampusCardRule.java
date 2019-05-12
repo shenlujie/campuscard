@@ -2,6 +2,11 @@ package org.slj.domain;
 
 import javax.persistence.*;
 
+/**
+ * @Description: 一卡通管理条例
+ * @create: 2019/5/12
+ * @Author: SLJ
+ */
 @Table(name = "campus_card_rule")
 public class CampusCardRule {
     @Id
