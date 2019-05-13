@@ -2,8 +2,12 @@ package org.slj.web.bo;
 
 import org.slj.domain.FrontUserStudent;
 import org.slj.domain.Permission;
+import org.slj.domain.Role;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,16 +19,19 @@ import java.util.List;
 public class CampusUserDetails implements UserDetails {
 
     private FrontUserStudent frontUserStudent;
-    private List<Permission> permissionList;
+    private Role role;
 
-    public CampusUserDetails(FrontUserStudent frontUserStudent, List<Permission> permissionList) {
+    public CampusUserDetails(FrontUserStudent frontUserStudent, Role role) {
         this.frontUserStudent = frontUserStudent;
-        this.permissionList = permissionList;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> list = new ArrayList<>();
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.getType());
+        list.add(simpleGrantedAuthority);
+        return list;
     }
 
     @Override

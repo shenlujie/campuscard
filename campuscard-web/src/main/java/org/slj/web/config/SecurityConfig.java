@@ -2,10 +2,13 @@ package org.slj.web.config;
 
 import org.slj.domain.FrontUserStudent;
 import org.slj.domain.Permission;
+import org.slj.domain.Role;
 import org.slj.service.FrontUserStudentService;
 import org.slj.service.PermissionService;
+import org.slj.service.RoleService;
 import org.slj.web.bo.CampusUserDetails;
 import org.slj.web.components.JwtAuthenticationTokenFilter;
+import org.slj.web.components.MyFilterSecurityInterceptor;
 import org.slj.web.components.RestAuthenticationEntryPoint;
 import org.slj.web.components.RestfulAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.List;
@@ -35,11 +39,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FrontUserStudentService frontUserStudentService;
     @Autowired
+    private RoleService roleService;
+    @Autowired
     private PermissionService permissionService;
     @Autowired
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    @Autowired
+    MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
     /**
      * 认证
@@ -60,33 +68,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()// 由于使用的是JWT，我们这里不需要csrf
-                .disable()
-                .sessionManagement()// 基于token，所以不需要session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET,
-                        // 入口
-                        "/",
-                        // 一卡通简介
-                        "/file/introRead",
-                        // 管理条例
-                        "/campusCardRule/list",
-                        // 使用指南
-                        "/file/guideRead",
-                        // 信息公告
-                        "/campusCardAnnouncement/list"
-                )
-                .permitAll()
-                .antMatchers("/frontUserStudent/login")
-                .permitAll()
-                .anyRequest()
-                // 除去以上所有请求全部需要鉴权
-                .authenticated();
+            .disable()
+            .sessionManagement()// 基于token，所以不需要session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            // 所有静态资源访问没有权限
+            .antMatchers(HttpMethod.GET,
+                    // 入口
+                    "/",
+                    // 一卡通简介
+                    "/file/introRead",
+                    // 管理条例
+                    "/campusCardRule/list",
+                    // 使用指南
+                    "/file/guideRead",
+                    // 信息公告
+                    "/campusCardAnnouncement/list"
+            )
+            // permitAll()就是允许所有角色|权限来访问
+            .permitAll()
+            // 允许匿名登录
+            .antMatchers("/frontUserStudent/login")
+            .permitAll()
+            .anyRequest()
+            // 除去以上所有请求全部需要鉴权
+            .authenticated();
+
         // 禁用缓存
         http.headers().cacheControl();
         // 添加JWT components
         http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        // 添加自定义的权限过滤器
+        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
         //添加自定义未授权和未登录结果返回
         http.exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandler)
@@ -111,8 +125,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return username -> {
             FrontUserStudent student = frontUserStudentService.getUserByUsername(username);
             if (student != null) {
-                List<Permission> permissionList = permissionService.getPermissionListByRoleId(student.getRoleId());
-                return new CampusUserDetails(student, permissionList);
+                // 数据库固定了，一个用户就对应一个角色
+                Role role = roleService.findById(student.getRoleId());
+                return new CampusUserDetails(student, role);
             }
             throw new UsernameNotFoundException("该用户不存在");
         };
