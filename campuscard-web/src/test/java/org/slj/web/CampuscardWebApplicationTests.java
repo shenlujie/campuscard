@@ -37,7 +37,7 @@ public class CampuscardWebApplicationTests {
         // 使用默认单例（加载默认词典）
         SensitiveFilter filter = new SensitiveFilter();
         // 向过滤器增加一个词
-        //filter.put("婚礼上唱春天在哪里");
+        //components.put("婚礼上唱春天在哪里");
 
         // 待过滤的句子
         String sentence = "然后，市长在婚礼上唱春天在哪里。";

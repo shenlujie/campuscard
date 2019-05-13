@@ -16,6 +16,17 @@ spring:
     properties:
       mail.smtp.socketFactory.fallback : true
       mail.smtp.starttls.enable: true
+
 mapper:
   mappers: org.slj.MyMapper
+
+jwt:
+  #JWT存储的请求头
+  tokenHeader: Authorization
+  #JWT加解密使用的密钥
+  secret: mySecret
+  #JWT的超期限时间(60*60*24)
+  expiration: 604800
+  #JWT负载中拿到开头
+  tokenHead: Bearer
 

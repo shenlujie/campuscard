@@ -8,7 +8,16 @@ import org.slj.domain.FrontUserStudent;
 import org.slj.enums.EmCode;
 import org.slj.service.FrontUserStudentService;
 import org.slj.web.utils.json.MsgJson;
+import org.slj.web.utils.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,9 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -37,6 +44,12 @@ public class FrontUserStudentController {
 
     @Autowired
     FrontUserStudentService frontUserStudentService;
+    @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add(FrontUserStudent frontUserStudent) {
@@ -109,14 +122,20 @@ public class FrontUserStudentController {
     public String login(@RequestParam(value = "stNum") String stNum, @RequestParam(value = "stPassword") String stPassword
     ) {
         MsgJson msgJson = new MsgJson();
-        FrontUserStudent frontUserStudent = frontUserStudentService.checkUsername(stNum);
-        if (null == frontUserStudent) {
+        String token = null;
+        try {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(stNum);
+            if(!passwordEncoder.matches(stPassword,userDetails.getPassword())){
+                throw new BadCredentialsException("密码不正确");
+            }
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            token = jwtTokenUtil.generateToken(userDetails);
+            msgJson = MsgJson.success(token);
+        } catch (UsernameNotFoundException e) {
             msgJson.setSuccess(false).setCode(EmCode.SUCCESS.getCode()).setMsg("该用户不存在");
-        } else if (!stPassword.equals(frontUserStudent.getStPassword())) {
+        } catch (BadCredentialsException e) {
             msgJson.setSuccess(false).setCode(EmCode.SUCCESS.getCode()).setMsg("密码不正确");
-        } else {
-            msgJson.setSuccess(true);
-            // 登录成功，返回token
         }
         return msgJson.toJson();
     }

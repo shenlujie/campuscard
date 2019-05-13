@@ -9,9 +9,9 @@ import org.slj.domain.FrontUserStudent;
 public interface FrontUserStudentService extends Service<FrontUserStudent> {
 
     /**
-     * 验证用户名是否存在
+     * 根据username获得User实体对象
      * @param username 用户名
      * @return 一卡通用户实体类
      */
-    FrontUserStudent checkUsername(String username);
+    FrontUserStudent getUserByUsername(String username);
 }

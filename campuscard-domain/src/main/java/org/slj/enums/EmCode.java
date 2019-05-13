@@ -17,6 +17,11 @@ public enum EmCode {
     BAD_REQUEST(400,"请求错误"),
 
     /**
+     * 未得到认证
+     */
+    UNAUTHORIZED(401, "暂未登录或token已经过期"),
+
+    /**
      * 没有权限
      */
     FORBIDDEN(403,"没有权限"),

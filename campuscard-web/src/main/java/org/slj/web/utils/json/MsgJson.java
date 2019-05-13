@@ -69,6 +69,20 @@ public class MsgJson implements Serializable{
     }
 
     /**
+     * 未得到认证
+     * @param data 返回的数据本体
+     * @return this
+     */
+    public static MsgJson unauthorized(Object data) {
+        MsgJson msgJson = new MsgJson();
+        msgJson.setSuccess(false)
+                .setCode(EmCode.UNAUTHORIZED.getCode())
+                .setMsg(EmCode.UNAUTHORIZED.getMsg())
+                .setObj(data);
+        return msgJson;
+    }
+
+    /**
      * 访问没有权限
      * @param data 返回的数据本体
      * @return this

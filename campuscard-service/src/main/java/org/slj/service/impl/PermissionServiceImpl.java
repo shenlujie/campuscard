@@ -6,6 +6,9 @@ import org.slj.service.AbstractService;
 import org.slj.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Condition;
+
+import java.util.List;
 
 /**
  *@create: 2019/5/12
@@ -16,4 +19,12 @@ public class PermissionServiceImpl extends AbstractService<Permission> implement
 
     @Autowired
     private PermissionMapper permissionMapper;
+
+    @Override
+    public List<Permission> getPermissionListByRoleId(int roleId) {
+        Condition condition = new Condition(Permission.class);
+        condition.createCriteria().andEqualTo("roleId", roleId);
+        List<Permission> list = permissionMapper.selectByCondition(condition);
+        return list;
+    }
 }

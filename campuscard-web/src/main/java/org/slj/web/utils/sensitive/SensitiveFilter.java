@@ -110,7 +110,7 @@ public class SensitiveFilter implements Serializable{
 	/**
 	 * 对句子进行敏感词过滤<br/>
 	 * 如果无敏感词返回输入的sentence对象，即可以用下面的方式判断是否有敏感词：<br/><code>
-	 * String result = filter.filter(sentence, '*');<br/>
+	 * String result = components.components(sentence, '*');<br/>
 	 * if(result != sentence){<br/>
 	 * &nbsp;&nbsp;// 有敏感词<br/>
 	 * }
