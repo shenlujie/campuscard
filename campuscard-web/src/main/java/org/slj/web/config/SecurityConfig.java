@@ -12,6 +12,7 @@ import org.slj.web.components.MyFilterSecurityInterceptor;
 import org.slj.web.components.RestAuthenticationEntryPoint;
 import org.slj.web.components.RestfulAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,6 +26,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
@@ -41,8 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private PermissionService permissionService;
-    @Autowired
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
@@ -51,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 认证
+     *
      * @param auth 设置用户信息以及密码加密方式
      * @throws Exception 异常
      */
@@ -62,38 +65,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 授权
+     *
      * @param http
      * @throws Exception
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()// 由于使用的是JWT，我们这里不需要csrf
-            .disable()
-            .sessionManagement()// 基于token，所以不需要session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            // 所有静态资源访问没有权限
-            .antMatchers(HttpMethod.GET,
-                    // 入口
-                    "/",
-                    // 一卡通简介
-                    "/file/introRead",
-                    // 管理条例
-                    "/campusCardRule/list",
-                    // 使用指南
-                    "/file/guideRead",
-                    // 信息公告
-                    "/campusCardAnnouncement/list"
-            )
-            // permitAll()就是允许所有角色|权限来访问
-            .permitAll()
-            // 允许匿名登录
-            .antMatchers("/frontUserStudent/login")
-            .permitAll()
-            .anyRequest()
-            // 除去以上所有请求全部需要鉴权
-            .authenticated();
+                .disable()
+                .sessionManagement()// 基于token，所以不需要session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                //跨域请求会先进行一次options请求
+                .antMatchers(HttpMethod.OPTIONS)
+                .permitAll()
+                // 所有静态资源访问没有权限
+                .antMatchers(HttpMethod.GET,
+                        // 入口
+                        "/",
+                        // 一卡通简介
+                        "/file/introRead",
+                        // 管理条例
+                        "/campusCardRule/list",
+                        // 使用指南
+                        "/file/guideRead",
+                        // 信息公告
+                        "/campusCardAnnouncement/list"
+                )
+                // permitAll()就是允许所有角色|权限来访问
+                .permitAll()
+                // 允许匿名登录
+                .antMatchers("/frontUserStudent/login")
+                .permitAll()
+                .anyRequest()
+                // 除去以上所有请求全部需要鉴权
+                .authenticated();
 
         // 禁用缓存
         http.headers().cacheControl();
@@ -139,7 +146,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @return JwtAuthenticationTokenFilter
      */
     @Bean
-    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){
+    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
+    }
+
+    /**
+     * 允许跨域调用的过滤器
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*");
+        config.setAllowCredentials(true);
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(0);
+        return new CorsFilter(source);
     }
 }
