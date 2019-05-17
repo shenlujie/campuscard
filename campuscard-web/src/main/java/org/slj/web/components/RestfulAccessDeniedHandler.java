@@ -23,6 +23,8 @@ public class RestfulAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException e) throws IOException, ServletException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         MsgJson msgJson = MsgJson.forbidden("没有权限");
         response.getWriter().println(msgJson.toJson());
         response.getWriter().flush();

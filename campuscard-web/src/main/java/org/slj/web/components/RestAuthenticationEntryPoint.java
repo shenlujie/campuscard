@@ -21,6 +21,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Origin",request.getHeader("Origin"));
         MsgJson msgJson = MsgJson.unauthorized("未得到认证");
         response.getWriter().println(msgJson.toJson());
         response.getWriter().flush();

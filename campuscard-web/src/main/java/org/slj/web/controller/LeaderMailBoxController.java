@@ -6,11 +6,15 @@ import org.slj.service.LeaderMailBoxService;
 import org.slj.web.utils.json.MsgJson;
 import org.slj.web.utils.sensitive.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -78,9 +82,15 @@ public class LeaderMailBoxController {
         return msgJson.toJson();
     }
 
-    @RequestMapping(value = "list",method = RequestMethod.GET)
-    public String list() {
-        List<LeaderMailBox> list = leaderMailBoxService.findAll();
+    @RequestMapping(value = "listByCondition",method = RequestMethod.GET)
+    public String listByCondition(HttpServletRequest request) {
+        Condition condition = new Condition(LeaderMailBox.class);
+        Example.Criteria criteria = condition.createCriteria();
+        String stId = request.getParameter("id");
+        if (!StringUtils.isEmpty(stId)) {
+            criteria.andEqualTo("stId", stId);
+        }
+        List<LeaderMailBox> list = leaderMailBoxService.findByCondition(condition);
         MsgJson msgJson = new MsgJson();
         if (list.size() != 0){
             msgJson.setSuccess(true)

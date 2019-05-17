@@ -1,10 +1,8 @@
 package org.slj.web.config;
 
 import org.slj.domain.FrontUserStudent;
-import org.slj.domain.Permission;
 import org.slj.domain.Role;
 import org.slj.service.FrontUserStudentService;
-import org.slj.service.PermissionService;
 import org.slj.service.RoleService;
 import org.slj.web.bo.CampusUserDetails;
 import org.slj.web.components.JwtAuthenticationTokenFilter;
@@ -27,10 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
-import java.util.List;
 
 /**
  * @Description: spring security 相关配置
@@ -77,9 +74,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                //跨域请求会先进行一次options请求
-                .antMatchers(HttpMethod.OPTIONS)
-                .permitAll()
+//                // 对跨域请求第一次发送的PreFlight请求进行允许
+//                .requestMatchers(CorsUtils::isPreFlightRequest)
+//                .permitAll()
+//                //跨域请求会先进行一次options请求
+//                .antMatchers(HttpMethod.OPTIONS)
+//                .permitAll()
                 // 所有静态资源访问没有权限
                 .antMatchers(HttpMethod.GET,
                         // 入口
@@ -114,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandler)
                 .authenticationEntryPoint(restAuthenticationEntryPoint);
+        http.cors();
     }
 
     /**
