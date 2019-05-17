@@ -7,10 +7,7 @@ import org.slj.web.utils.json.MsgJson;
 import org.slj.web.utils.sensitive.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
@@ -31,7 +28,7 @@ public class LeaderMailBoxController {
     LeaderMailBoxService leaderMailBoxService;
 
     @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(LeaderMailBox leaderMailBox){
+    public String add(@RequestBody LeaderMailBox leaderMailBox){
         String title = leaderMailBox.getTitle();
         String content = leaderMailBox.getContent();
 
