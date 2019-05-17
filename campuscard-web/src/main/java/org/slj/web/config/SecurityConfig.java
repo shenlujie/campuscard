@@ -91,7 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         // 使用指南
                         "/file/guideRead",
                         // 信息公告
-                        "/campusCardAnnouncement/list"
+                        "/campusCardAnnouncement/list",
+                        // 公告详情
+                        "/campusCardAnnouncement/detail"
                 )
                 // permitAll()就是允许所有角色|权限来访问
                 .permitAll()

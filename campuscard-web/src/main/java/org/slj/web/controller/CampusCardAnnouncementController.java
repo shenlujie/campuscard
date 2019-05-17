@@ -8,10 +8,13 @@ import org.slj.enums.EmCode;
 import org.slj.service.CampusCardAnnouncementService;
 import org.slj.web.utils.json.MsgJson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -69,19 +72,17 @@ public class CampusCardAnnouncementController {
     }
 
     @RequestMapping(value = "list",method = RequestMethod.GET)
-    public String list() {
+    public String listByCondition(@RequestParam(defaultValue = "0") Integer page
+            , @RequestParam(defaultValue = "0") Integer limit){
+        PageHelper.startPage(page, limit);
         List<CampusCardAnnouncement> list = campusCardAnnouncementService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
         MsgJson msgJson = new MsgJson();
-        if (list.size() != 0){
-            msgJson.setSuccess(true)
-                    .setCode(EmCode.SUCCESS.getCode())
-                    .setMsg(EmCode.SUCCESS.getMsg())
-                    .setCount(list.size())
-                    .setObj(list);
-        }else {
-            msgJson = MsgJson.not_found("没有数据");
-        }
-
+        msgJson.setSuccess(true)
+                .setCode(EmCode.SUCCESS.getCode())
+                .setMsg(EmCode.SUCCESS.getMsg())
+                .setCount((int)pageInfo.getTotal())
+                .setObj(list);
         return msgJson.toJson();
     }
 }
