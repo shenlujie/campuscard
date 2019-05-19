@@ -8,14 +8,14 @@ import org.slj.service.CampusCardLostService;
 import org.slj.web.utils.json.MsgJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -31,9 +31,11 @@ public class CampusCardLostController {
     CampusCardLostService campusCardLostService;
 
     @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(CampusCardLost campusCardLost) {
+    public String add(@RequestBody CampusCardLost campusCardLost) {
+        MsgJson msgJson;
         campusCardLostService.saveModel(campusCardLost);
-        return "";
+        msgJson = MsgJson.success("提交成功");
+        return msgJson.toJson();
     }
 
     @RequestMapping(value = "delete",method = RequestMethod.DELETE)
@@ -76,6 +78,10 @@ public class CampusCardLostController {
         String upStNum = request.getParameter("upStNum");
         String lostStNum = request.getParameter("lostStNum");
         String lostStName = request.getParameter("lostStName");
+        Integer status = Integer.valueOf(request.getParameter("status"));
+        if (!StringUtils.isEmpty(status)){
+            criteria.andEqualTo("status", status);
+        }
         if (!StringUtils.isEmpty(upStNum)){
             criteria.andLike("upStNum", "%" + upStNum + "%");
         }
@@ -93,6 +99,35 @@ public class CampusCardLostController {
                 .setMsg(EmCode.SUCCESS.getMsg())
                 .setCount((int)pageInfo.getTotal())
                 .setObj(list);
+        return msgJson.toJson();
+    }
+
+    @RequestMapping(value = "upLoadPic",method = RequestMethod.POST)
+    public String upLoadPic(@RequestParam MultipartFile file, @RequestParam String curUser) {
+        MsgJson msgJson;
+        if (file.isEmpty()){
+            msgJson = new MsgJson();
+            msgJson.setSuccess(false)
+                    .setCode(200)
+                    .setMsg("文件为空，上传失败");
+            return msgJson.toJson();
+        }
+        String oldFileName = file.getOriginalFilename();
+        String subFileName = oldFileName.substring(oldFileName.lastIndexOf("."));
+        String fileName = "campuscard-" + curUser + subFileName;
+        String path = "A:\\IntelliJ IDEA\\workspace_backup\\campuscard\\campuscard-web\\src\\main\\resources\\static\\cardPic\\";
+        File tarFile = new File(path + fileName);
+        try {
+            file.transferTo(tarFile);
+            msgJson = MsgJson.success("上传成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            msgJson = new MsgJson();
+            msgJson.setSuccess(false)
+                    .setCode(200)
+                    .setMsg("文件名有误，上传失败");
+            return msgJson.toJson();
+        }
         return msgJson.toJson();
     }
 }

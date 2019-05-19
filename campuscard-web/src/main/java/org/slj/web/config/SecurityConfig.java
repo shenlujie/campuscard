@@ -84,6 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,
                         // 入口
                         "/",
+                        // 静态图片开放请求
+                        "/cardPic/*",
                         // 一卡通简介
                         "/file/introRead",
                         // 管理条例
