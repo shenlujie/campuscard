@@ -99,4 +99,26 @@ public class ConsumeTermDetailController {
                 .setObj(list);
         return msgJson.toJson();
     }
+
+    @RequestMapping(value = "listById",method = RequestMethod.GET)
+    public String listById(@RequestParam(defaultValue = "0") Integer page
+            , @RequestParam(defaultValue = "0") Integer limit
+            , HttpServletRequest request){
+        PageHelper.startPage(page, limit);
+        Condition condition = new Condition(ConsumeTermDetail.class);
+        Example.Criteria criteria = condition.createCriteria();
+        String stNum = request.getParameter("stNum");
+        if (!StringUtils.isEmpty(stNum)){
+            criteria.andEqualTo("stNum", stNum);
+        }
+        List<ConsumeTermDetail> list = consumeTermDetailService.findByCondition(condition);
+        PageInfo pageInfo = new PageInfo(list);
+        MsgJson msgJson = new MsgJson();
+        msgJson.setSuccess(true)
+                .setCode(EmCode.SUCCESS.getCode())
+                .setMsg(EmCode.SUCCESS.getMsg())
+                .setCount((int)pageInfo.getTotal())
+                .setObj(list);
+        return msgJson.toJson();
+    }
 }
