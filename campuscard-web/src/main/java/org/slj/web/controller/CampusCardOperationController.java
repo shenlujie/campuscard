@@ -2,6 +2,7 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slj.domain.CampusCardLost;
 import org.slj.domain.CampusCardOperation;
 import org.slj.enums.EmCode;
 import org.slj.service.CampusCardOperationService;
@@ -9,12 +10,15 @@ import org.slj.service.FrontUserStudentService;
 import org.slj.service.SendMessageService;
 import org.slj.web.utils.json.MsgJson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 /**
 *@Description: 校园卡业务办理
@@ -50,9 +54,19 @@ public class CampusCardOperationController {
     FrontUserStudentService frontUserStudentService;
 
     @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(CampusCardOperation campusCardOperation) {
+    public String add( @RequestBody CampusCardOperation campusCardOperation) {
+        MsgJson msgJson;
+        if (campusCardOperation.getApply().equals(0)){
+            campusCardOperation.setApply("挂失");
+        }else if (campusCardOperation.getApply().equals(1)){
+            campusCardOperation.setApply("解挂");
+        }else {
+            campusCardOperation.setApply("补办");
+        }
+        campusCardOperation.setStatus("办理中");
         campusCardOperationService.saveModel(campusCardOperation);
-        return "";
+        msgJson = MsgJson.success("提交成功");
+        return msgJson.toJson();
     }
 
     @RequestMapping(value = "delete",method = RequestMethod.DELETE)
@@ -98,6 +112,25 @@ public class CampusCardOperationController {
         return msgJson.toJson();
     }
 
+    @RequestMapping(value = "listById",method = RequestMethod.GET)
+    public String listById(@RequestParam(defaultValue = "0") Integer page,
+                           @RequestParam(defaultValue = "0") Integer size,
+                           @RequestParam Integer stId) {
+        PageHelper.startPage(page, size);
+        tk.mybatis.mapper.entity.Condition condition = new Condition(CampusCardOperation.class);
+        Example.Criteria criteria = condition.createCriteria();
+        criteria.andEqualTo("stId", stId);
+        List<CampusCardOperation> list = campusCardOperationService.findByCondition(condition);
+        PageInfo pageInfo = new PageInfo(list);
+        MsgJson msgJson = new MsgJson();
+        msgJson.setSuccess(true)
+                .setCode(EmCode.SUCCESS.getCode())
+                .setMsg(EmCode.SUCCESS.getMsg())
+                .setCount(list.size())
+                .setObj(list);
+        return msgJson.toJson();
+    }
+
     @RequestMapping(value = "/sendMessage",method = RequestMethod.POST)
     public String sendMessage(@RequestParam int id,@RequestParam String apply){
         int stId = campusCardOperationService.findById(id).getStId();
@@ -105,6 +138,36 @@ public class CampusCardOperationController {
         String content = "您申请办理的业务[" + apply + "],已经处理完毕，如是补办，请到一卡通电子中心领取.";
         boolean res = sendMessageService.sendMessage(FROM, to, TITLE, content);
         MsgJson msgJson = MsgJson.success(res);
+        return msgJson.toJson();
+    }
+
+    @RequestMapping(value = "upLoadPic",method = RequestMethod.POST)
+    public String upLoadPic(@RequestParam MultipartFile file, @RequestParam String curUser) {
+        MsgJson msgJson;
+        if (file.isEmpty()){
+            msgJson = new MsgJson();
+            msgJson.setSuccess(false)
+                    .setCode(200)
+                    .setMsg("文件为空，上传失败");
+            return msgJson.toJson();
+        }
+        String oldFileName = file.getOriginalFilename();
+        String subFileName = oldFileName.substring(oldFileName.lastIndexOf("."));
+        Random random = new Random(10000);
+        String fileName = "campuscard-" + curUser + random.nextInt() + subFileName;
+        String path = "A:\\IntelliJ IDEA\\workspace_backup\\campuscard\\campuscard-web\\src\\main\\resources\\static\\userIDPic\\";
+        File tarFile = new File(path + fileName);
+        try {
+            file.transferTo(tarFile);
+            msgJson = MsgJson.success("上传成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            msgJson = new MsgJson();
+            msgJson.setSuccess(false)
+                    .setCode(200)
+                    .setMsg("文件名有误，上传失败");
+            return msgJson.toJson();
+        }
         return msgJson.toJson();
     }
 }
