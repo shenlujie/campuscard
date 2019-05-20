@@ -165,7 +165,7 @@ public class CampusCardOperationController {
             msgJson = new MsgJson();
             msgJson.setSuccess(false)
                     .setCode(200)
-                    .setMsg("文件名有误，上传失败");
+                    .setMsg("上传失败");
             return msgJson.toJson();
         }
         return msgJson.toJson();

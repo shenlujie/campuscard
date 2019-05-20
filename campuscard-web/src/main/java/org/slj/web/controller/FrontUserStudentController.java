@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.slj.domain.FrontUserStudent;
 import org.slj.enums.EmCode;
 import org.slj.service.FrontUserStudentService;
+import org.slj.web.bo.ChangePswParams;
 import org.slj.web.bo.LoginParams;
 import org.slj.web.utils.json.MsgJson;
 import org.slj.web.utils.jwt.JwtTokenUtil;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -149,5 +149,28 @@ public class FrontUserStudentController {
         FrontUserStudent frontUserStudent = frontUserStudentService.getUserByUsername(stNum);
         MsgJson msgJson = MsgJson.success(frontUserStudent);
         return msgJson.toJson();
+    }
+
+    @RequestMapping(value = "changePsw", method = RequestMethod.POST)
+    public String changePsw(@RequestBody ChangePswParams changePswParams) {
+        MsgJson msgJson;
+        UserDetails userDetails = userDetailsService.loadUserByUsername(changePswParams.getStNum());
+        if (!passwordEncoder.matches(changePswParams.getCurPsw(), userDetails.getPassword())) {
+            msgJson = new MsgJson();
+            msgJson.setCode(200).setSuccess(false).setMsg("当前密码不正确");
+            return msgJson.toJson();
+        }else if (!changePswParams.getNewPsw().equals(changePswParams.getReNewPsw())){
+            msgJson = new MsgJson();
+            msgJson.setCode(200).setSuccess(false).setMsg("两次密码输入不一致");
+            return msgJson.toJson();
+        }else {
+            FrontUserStudent frontUserStudent = frontUserStudentService.getUserByUsername(changePswParams.getStNum());
+            String finalPsw = passwordEncoder.encode(changePswParams.getNewPsw());
+            frontUserStudent.setStPassword(finalPsw);
+            frontUserStudentService.update(frontUserStudent);
+            msgJson = new MsgJson();
+            msgJson.setCode(200).setSuccess(true).setMsg("修改成功");
+            return msgJson.toJson();
+        }
     }
 }
