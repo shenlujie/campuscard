@@ -5,15 +5,10 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slj.service.SendMessageService;
-import org.slj.web.utils.parse.TxtParseUtil;
 import org.slj.web.utils.sensitive.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -45,7 +40,7 @@ public class CampuscardWebApplicationTests {
         String filted = filter.filter(sentence, '*');
 
         // 如果未过滤，则返回输入的String引用
-        if(sentence != filted){
+        if(!sentence.equals(filted) ){
             // 句子中有敏感词
             System.out.println(filted);
         }

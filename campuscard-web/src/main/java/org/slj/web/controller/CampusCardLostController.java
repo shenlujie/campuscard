@@ -28,7 +28,7 @@ import java.util.List;
 public class CampusCardLostController {
 
     @Autowired
-    CampusCardLostService campusCardLostService;
+    private CampusCardLostService campusCardLostService;
 
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public String add(@RequestBody CampusCardLost campusCardLost) {
@@ -78,9 +78,10 @@ public class CampusCardLostController {
         String upStNum = request.getParameter("upStNum");
         String lostStNum = request.getParameter("lostStNum");
         String lostStName = request.getParameter("lostStName");
-        Integer status = Integer.valueOf(request.getParameter("status"));
+        String status = request.getParameter("status");
         if (!StringUtils.isEmpty(status)){
-            criteria.andEqualTo("status", status);
+            Integer curStatus = Integer.valueOf(status);
+            criteria.andEqualTo("status", curStatus);
         }
         if (!StringUtils.isEmpty(upStNum)){
             criteria.andLike("upStNum", "%" + upStNum + "%");

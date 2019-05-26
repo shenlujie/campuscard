@@ -36,7 +36,7 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
         invoke(filterInvocation);
     }
 
-    public void invoke( FilterInvocation fi ) throws IOException, ServletException{
+    private void invoke( FilterInvocation fi ) throws IOException, ServletException{
 
         InterceptorStatusToken token = super.beforeInvocation(fi);
 
@@ -47,10 +47,6 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
         }
 
     }
-
-    /*public FilterInvocationSecurityMetadataSource getSecurityMetadataSource(){
-        return this.securityMetadataSource;
-    }*/
 
     @Override
     public Class<?> getSecureObjectClass() {
@@ -63,7 +59,7 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 

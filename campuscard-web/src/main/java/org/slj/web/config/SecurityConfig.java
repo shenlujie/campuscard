@@ -25,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -46,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired
-    MyFilterSecurityInterceptor myFilterSecurityInterceptor;
+    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
     /**
      * 认证
@@ -63,8 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 授权
      *
-     * @param http
-     * @throws Exception
+     * @param http http协议配置
+     * @throws Exception 抛出异常
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -95,7 +94,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         // 信息公告
                         "/campusCardAnnouncement/list",
                         // 公告详情
-                        "/campusCardAnnouncement/detail"
+                        "/campusCardAnnouncement/detail",
+                        // webSocket上线请求放行
+                        "/client/*"
                 )
                 // permitAll()就是允许所有角色|权限来访问
                 .permitAll()
