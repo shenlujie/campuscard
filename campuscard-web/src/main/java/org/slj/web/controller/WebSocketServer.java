@@ -1,11 +1,14 @@
 package org.slj.web.controller;
 
+import org.slj.web.utils.json.MsgJson;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,6 +29,16 @@ public class WebSocketServer {
      * 广播的用户id
      */
     private static final String ALL_USER = "all";
+
+    /**
+     * 发给管理员的重新渲染的信号
+     */
+    private static final String RENDER_SIGNAL = "render";
+
+    /**
+     * 发给管理员的消息的信号
+     */
+    private static final String MESSAGE_SIGNAL = "message";
 
     /**
      * 统计在线人数
@@ -72,9 +85,14 @@ public class WebSocketServer {
         if (ADMIN_ID.equals(userId)) {
             this.isAdmin = true;
             System.out.println("管理员上线了");
+            rerenderAdminChat();
         }else {
             this.isUser = true;
             System.out.println("用户" + userId + "上线了");
+            // 通知管理员有新用户上线，管理员重新渲染聊天室
+            if (websocketList.containsKey(ADMIN_ID)) {
+                rerenderAdminChat();
+            }
         }
 
     }
@@ -92,6 +110,9 @@ public class WebSocketServer {
             }
             if (isUser) {
                 System.out.println("用户" + userId + "下线");
+                if (websocketList.containsKey(ADMIN_ID)) {
+                    rerenderAdminChat();
+                }
             }
         }
     }
@@ -151,9 +172,14 @@ public class WebSocketServer {
     private void sendMessageToAdmin(String message) throws IOException {
         if (websocketList.get(ADMIN_ID) != null) {
             Session adminSession = websocketList.get(ADMIN_ID).session;
-            adminSession.getBasicRemote().sendText(message);
+            MsgJson msgJson = new MsgJson();
+            msgJson.setCode(200)
+                    .setSuccess(true)
+                    .setMsg(MESSAGE_SIGNAL)
+                    .setObj(message);
+            adminSession.getBasicRemote().sendText(msgJson.toJson());
         }else {
-            this.session.getBasicRemote().sendText("warning： 管理员当前不在线");
+            this.session.getBasicRemote().sendText("管理员当前不在线");
         }
     }
 
@@ -165,7 +191,7 @@ public class WebSocketServer {
             Session userSession = websocketList.get(userId).session;
             userSession.getBasicRemote().sendText(messageContent);
         }else {
-            this.session.getBasicRemote().sendText("warning： 用户当前不在线");
+            this.session.getBasicRemote().sendText("用户当前不在线");
         }
     }
 
@@ -176,6 +202,31 @@ public class WebSocketServer {
         for (String userId  : websocketList.keySet()) {
             Session curUserSession = websocketList.get(userId).session;
             curUserSession.getBasicRemote().sendText(message);
+        }
+    }
+
+    /**
+     * 当有线上人员变更时，通知管理员重新渲染聊条室
+     */
+    private void rerenderAdminChat() {
+        List<String> otherUserStNums = new ArrayList<>();
+        for (String stNum : websocketList.keySet()) {
+            if (!stNum.equals(ADMIN_ID)) {
+                otherUserStNums.add(stNum);
+            }
+        }
+        MsgJson msgJson = new MsgJson();
+        msgJson.setCode(200)
+                .setSuccess(true)
+                .setMsg(RENDER_SIGNAL)
+                .setObj(otherUserStNums);
+        try {
+            if (websocketList.get(ADMIN_ID) != null) {
+                websocketList.get(ADMIN_ID).session.getBasicRemote().sendText(msgJson.toJson());
+            }
+        } catch (IOException e) {
+            System.out.println("给管理员发送消息异常：" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
