@@ -40,7 +40,7 @@ public class CampusCardRuleController {
     @RequestMapping(value = "update",method = RequestMethod.PUT)
     public String update(CampusCardRule campusCardRule) {
         campusCardRuleService.update(campusCardRule);
-        MsgJson msgJson = MsgJson.success("删除成功");
+        MsgJson msgJson = MsgJson.success("修改成功");
         return msgJson.toJson();
     }
 

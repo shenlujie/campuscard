@@ -8,8 +8,8 @@ import java.util.NavigableSet;
  * * 增加一个敏感词：{@link #put(String)} <br/>
  * * 过滤一个句子：{@link #filter(String, char)} <br/>
  * 
- * @author ZhangXiaoye
- * @date 2017年1月5日 下午4:18:38
+ * @author SLJ
+ * @date 2019年4月5日 下午4:18:38
  */
 public class SensitiveFilter implements Serializable{
 	
@@ -39,8 +39,6 @@ public class SensitiveFilter implements Serializable{
 	 * <b>注意：</b>读取完成后会调用{@link BufferedReader#close()}方法。<br/>
 	 * <b>注意：</b>读取中的{@link IOException}不会抛出
 	 *
-	 * @author ZhangXiaoye
-	 * @date 2017年1月5日 下午4:21:06
 	 */
 	public SensitiveFilter(){
 		try{
@@ -60,8 +58,6 @@ public class SensitiveFilter implements Serializable{
 	 * 此方法（构建）并不是主要的性能优化点。
 	 * 
 	 * @param word
-	 * @author ZhangXiaoye
-	 * @date 2017年1月5日 下午2:35:21
 	 */
 	public boolean put(String word){
 		// 长度小于2的不加入
@@ -119,8 +115,6 @@ public class SensitiveFilter implements Serializable{
 	 * @param sentence 句子
 	 * @param replace 敏感词的替换字符
 	 * @return 过滤后的句子 
-	 * @author ZhangXiaoye
-	 * @date 2017年1月5日 下午4:16:31
 	 */
 	public String filter(String sentence, char replace){
 		// 先转换为StringPointer

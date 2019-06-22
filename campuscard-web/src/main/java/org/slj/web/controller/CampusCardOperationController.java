@@ -56,9 +56,9 @@ public class CampusCardOperationController {
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public String add( @RequestBody CampusCardOperation campusCardOperation) {
         MsgJson msgJson;
-        if (campusCardOperation.getApply().equals(0)){
+        if (campusCardOperation.getApply().equals("0")){
             campusCardOperation.setApply("挂失");
-        }else if (campusCardOperation.getApply().equals(1)){
+        }else if (campusCardOperation.getApply().equals("1")){
             campusCardOperation.setApply("解挂");
         }else {
             campusCardOperation.setApply("补办");
@@ -79,10 +79,10 @@ public class CampusCardOperationController {
     public String update(@RequestParam int id, @RequestParam String status) {
         CampusCardOperation campusCardOperation = campusCardOperationService.findById(id);
         if (ORDER.equals(status)){
-            campusCardOperation.setStatus("办理中");
+            campusCardOperation.setStatus("已完成");
         }
         campusCardOperationService.update(campusCardOperation);
-        MsgJson msgJson = MsgJson.success("正在办理");
+        MsgJson msgJson = MsgJson.success("已完成");
         return msgJson.toJson();
     }
 
