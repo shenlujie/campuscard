@@ -73,12 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                // 对跨域请求第一次发送的PreFlight请求进行允许
-//                .requestMatchers(CorsUtils::isPreFlightRequest)
-//                .permitAll()
-//                //跨域请求会先进行一次options请求
-//                .antMatchers(HttpMethod.OPTIONS)
-//                .permitAll()
                 // 所有静态资源访问没有权限
                 .antMatchers(HttpMethod.GET,
                         // 入口

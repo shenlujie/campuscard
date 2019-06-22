@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.BackUserAdministrator;
 import org.slj.enums.EmCode;
 import org.slj.service.BackUserAdministratorService;
@@ -23,20 +25,13 @@ import java.util.List;
 @RequestMapping("/backUserAdministrator/")
 public class BackUserAdministratorController {
 
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
     BackUserAdministratorService backUserAdministratorService;
-
-    @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(BackUserAdministrator backUserAdministrator) {
-        backUserAdministratorService.saveModel(backUserAdministrator);
-        return "";
-    }
-
-    @RequestMapping(value = "delete",method = RequestMethod.DELETE)
-    public String delete(@RequestParam Integer id) {
-	    backUserAdministratorService.deleteById(id);
-	    return "";
-    }
 
     @RequestMapping(value = "update",method = RequestMethod.PUT)
     public String update(BackUserAdministrator backUserAdministrator) {
@@ -50,7 +45,7 @@ public class BackUserAdministratorController {
         MsgJson msgJson;
         BackUserAdministrator administrator = backUserAdministratorService.findById(id);
         if (null == administrator){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(administrator);
         }

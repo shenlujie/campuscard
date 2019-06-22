@@ -1,7 +1,6 @@
 package org.slj.web.bo;
 
 import org.slj.domain.FrontUserStudent;
-import org.slj.domain.Permission;
 import org.slj.domain.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

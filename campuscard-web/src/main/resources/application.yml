@@ -4,13 +4,13 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 #   数据库连接信息
     username: root
-    password: "025614"
+    password: "******"
     url: jdbc:mysql://139.199.25.59:3306/campuscard?characterEncoding=UTF-8&useServerPrepStmts=true&rewriteBatchedStatements=true
     driver-class-name: com.mysql.jdbc.Driver
   mail:
     host: smtp.163.com
     username: 18234175208@163.com
-    password: 'JayBryant5201314'
+    password: '*********5201314'
     port: 25
     default-encoding: UTF-8
     properties:

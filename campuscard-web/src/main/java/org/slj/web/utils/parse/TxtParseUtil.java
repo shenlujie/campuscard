@@ -69,7 +69,7 @@ public class TxtParseUtil {
         try {
             //写入将UTF-8转换成GBK
             writer = new OutputStreamWriter(new FileOutputStream(BASE_PATH + fileName));
-            System.out.println("编码为：" + writer.getEncoding());
+            LOG.info("编码为：" + writer.getEncoding());
             bufferedWriter = new BufferedWriter(writer);
             bufferedWriter.write(content);
             bufferedWriter.flush();

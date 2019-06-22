@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.CampusCardLost;
 import org.slj.domain.CampusCardOperation;
 import org.slj.enums.EmCode;
@@ -30,9 +32,24 @@ import java.util.Random;
 public class CampusCardOperationController {
 
     /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    /**
      * 业务处理状态
      */
     private static final String ORDER = "预约中";
+
+    /**
+     * 业务类型挂失
+     */
+    private static final String LOSS = "0";
+
+    /**
+     * 业务类型解挂
+     */
+    private static final String SO_LOSS = "1";
 
     /**
      * 邮箱起始地址
@@ -56,9 +73,9 @@ public class CampusCardOperationController {
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public String add( @RequestBody CampusCardOperation campusCardOperation) {
         MsgJson msgJson;
-        if (campusCardOperation.getApply().equals("0")){
+        if (campusCardOperation.getApply().equals(LOSS)){
             campusCardOperation.setApply("挂失");
-        }else if (campusCardOperation.getApply().equals("1")){
+        }else if (campusCardOperation.getApply().equals(SO_LOSS)){
             campusCardOperation.setApply("解挂");
         }else {
             campusCardOperation.setApply("补办");
@@ -91,7 +108,7 @@ public class CampusCardOperationController {
         MsgJson msgJson;
         CampusCardOperation operation = campusCardOperationService.findById(id);
         if (null == operation){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(operation);
         }

@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.CampusCardLost;
 import org.slj.enums.EmCode;
 import org.slj.service.CampusCardLostService;
@@ -26,6 +28,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/campusCardLost/")
 public class CampusCardLostController {
+
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CampusCardLostService campusCardLostService;
@@ -61,7 +68,7 @@ public class CampusCardLostController {
         MsgJson msgJson;
         CampusCardLost lost = campusCardLostService.findById(id);
         if (null == lost){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(lost);
         }

@@ -35,12 +35,6 @@ public class ConsumeTermDetailController {
     @Autowired
     ConsumeTermDetailService consumeTermDetailService;
 
-    @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(ConsumeTermDetail consumeTermDetail) {
-        consumeTermDetailService.saveModel(consumeTermDetail);
-        return "";
-    }
-
     @RequestMapping(value = "delete",method = RequestMethod.DELETE)
     public String delete(@RequestParam Integer id) {
 	    consumeTermDetailService.deleteById(id);
@@ -48,18 +42,12 @@ public class ConsumeTermDetailController {
 	    return msgJson.toJson();
     }
 
-    @RequestMapping(value = "update",method = RequestMethod.PUT)
-    public String update(ConsumeTermDetail consumeTermDetail) {
-	    consumeTermDetailService.update(consumeTermDetail);
-	    return "";
-    }
-
     @RequestMapping(value = "detail",method = RequestMethod.GET)
     public String detail(@RequestParam Integer id) {
         MsgJson msgJson;
         ConsumeTermDetail termDetail = consumeTermDetailService.findById(id);
         if (null == termDetail){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(termDetail);
         }

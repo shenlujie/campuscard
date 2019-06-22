@@ -7,12 +7,24 @@ package org.slj.web.bo;
  */
 public class ChangePswParams {
 
+    /**
+     * 学生学号
+     */
     private String stNum;
 
+    /**
+     * 当前密码
+     */
     private String curPsw;
 
+    /**
+     * 新密码
+     */
     private String newPsw;
 
+    /**
+     * 新密码二次输入
+     */
     private String reNewPsw;
 
     public String getStNum() {

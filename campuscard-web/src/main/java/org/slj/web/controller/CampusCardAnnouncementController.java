@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.BackUserAdministrator;
 import org.slj.domain.CampusCardAnnouncement;
 import org.slj.enums.EmCode;
@@ -30,20 +32,13 @@ import java.util.List;
 @RequestMapping("/campusCardAnnouncement/")
 public class CampusCardAnnouncementController {
 
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
     CampusCardAnnouncementService campusCardAnnouncementService;
-
-    @RequestMapping(value = "update",method = RequestMethod.PUT)
-    public String update(CampusCardAnnouncement campusCardAnnouncement) {
-        campusCardAnnouncementService.update(campusCardAnnouncement);
-        return "";
-    }
-
-    @RequestMapping(value = "delete",method = RequestMethod.DELETE)
-    public String delete(@RequestParam Integer id) {
-	    campusCardAnnouncementService.deleteById(id);
-	    return "";
-    }
 
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public String add(HttpServletRequest request) {
@@ -64,7 +59,7 @@ public class CampusCardAnnouncementController {
         MsgJson msgJson;
         CampusCardAnnouncement announcement = campusCardAnnouncementService.findById(id);
         if (null == announcement){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(announcement);
         }

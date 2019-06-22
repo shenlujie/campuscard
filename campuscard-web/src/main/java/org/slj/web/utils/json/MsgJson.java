@@ -59,7 +59,7 @@ public class MsgJson implements Serializable{
      * @param data 返回的数据本体
      * @return this
      */
-    public static MsgJson bad_request(Object data) {
+    public static MsgJson badRequest(Object data) {
         MsgJson msgJson = new MsgJson();
         msgJson.setSuccess(false)
                 .setCode(EmCode.BAD_REQUEST.getCode())
@@ -101,7 +101,7 @@ public class MsgJson implements Serializable{
      * @param data 返回的数据本体
      * @return this
      */
-    public static MsgJson not_found(Object data) {
+    public static MsgJson notFound(Object data) {
         MsgJson msgJson = new MsgJson();
         msgJson.setSuccess(false)
                 .setCode(EmCode.NOT_FOUND.getCode())
@@ -115,7 +115,7 @@ public class MsgJson implements Serializable{
      * @param data 返回的数据本体
      * @return this
      */
-    public static MsgJson server_error(Object data) {
+    public static MsgJson serverError(Object data) {
         MsgJson msgJson = new MsgJson();
         msgJson.setSuccess(false)
                 .setCode(EmCode.SERVER_ERROR.getCode())

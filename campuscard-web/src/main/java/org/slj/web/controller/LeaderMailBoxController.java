@@ -1,5 +1,7 @@
 package org.slj.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.LeaderMailBox;
 import org.slj.enums.EmCode;
 import org.slj.service.LeaderMailBoxService;
@@ -23,6 +25,10 @@ import java.util.List;
 @RequestMapping("/leaderMailBox/")
 public class LeaderMailBoxController {
 
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     LeaderMailBoxService leaderMailBoxService;
@@ -72,7 +78,7 @@ public class LeaderMailBoxController {
         MsgJson msgJson;
         LeaderMailBox leaderMailBox = leaderMailBoxService.findById(id);
         if (null == leaderMailBox){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(leaderMailBox);
         }
@@ -96,7 +102,7 @@ public class LeaderMailBoxController {
                     .setCount(list.size())
                     .setObj(list);
         }else {
-            msgJson = MsgJson.not_found("没有数据");
+            msgJson = MsgJson.notFound("没有数据");
         }
 
         return msgJson.toJson();

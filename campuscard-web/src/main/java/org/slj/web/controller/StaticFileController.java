@@ -1,5 +1,7 @@
 package org.slj.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.web.utils.json.MsgJson;
 import org.slj.web.utils.parse.TxtParseUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/file")
 public class StaticFileController {
+
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /**
      * 一卡通简介文档名

@@ -1,5 +1,7 @@
 package org.slj.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.web.utils.json.MsgJson;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @ServerEndpoint(value = "/client/{userId}")
 public class WebSocketServer {
+
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /**
      * 管理员id

@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.CampusCardAccount;
 import org.slj.service.CampusCardAccountService;
 import org.slj.web.utils.json.MsgJson;
@@ -22,33 +24,20 @@ import java.util.List;
 @RequestMapping("/campusCardAccount/")
 public class CampusCardAccountController {
 
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
     CampusCardAccountService campusCardAccountService;
-
-    @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(CampusCardAccount campusCardAccount) {
-        campusCardAccountService.saveModel(campusCardAccount);
-        return "";
-    }
-
-    @RequestMapping(value = "delete",method = RequestMethod.DELETE)
-    public String delete(@RequestParam Integer id) {
-	    campusCardAccountService.deleteById(id);
-	    return "";
-    }
-
-    @RequestMapping(value = "update",method = RequestMethod.PUT)
-    public String update(CampusCardAccount campusCardAccount) {
-	    campusCardAccountService.update(campusCardAccount);
-	    return "";
-    }
 
     @RequestMapping(value = "detail",method = RequestMethod.GET)
     public String detail(@RequestParam Integer id) {
         MsgJson msgJson;
         CampusCardAccount account = campusCardAccountService.findById(id);
         if (null == account){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(account);
         }

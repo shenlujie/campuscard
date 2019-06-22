@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.CampusCardRule;
 import org.slj.dto.UserMail;
 import org.slj.dto.UserOperation;
@@ -26,6 +28,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/userMail")
 public class UserMailController {
+
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /**
      * 领导的邮箱
@@ -64,7 +71,7 @@ public class UserMailController {
                     .setCount(list.size())
                     .setObj(list);
         }else {
-            msgJson = MsgJson.not_found("没有数据");
+            msgJson = MsgJson.notFound("没有数据");
         }
 
         return msgJson.toJson();

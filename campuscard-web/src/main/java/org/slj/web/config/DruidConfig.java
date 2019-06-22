@@ -36,7 +36,7 @@ public class DruidConfig {
     @Bean
     public ServletRegistrationBean statViewServlet(){
         ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
-        Map<String,String> initParams = new HashMap<>();
+        Map<String,String> initParams = new HashMap<>(3);
         initParams.put("loginUsername", "admin");
         initParams.put("loginPassword", "025614");
         initParams.put("allow", "");
@@ -53,7 +53,7 @@ public class DruidConfig {
         FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new WebStatFilter());
 
-        Map<String,String> initParams = new HashMap<>();
+        Map<String,String> initParams = new HashMap<>(1);
         initParams.put("exclusion","*.js,*.css,/druid/*" );
         bean.setInitParameters(initParams);
         bean.setUrlPatterns(Arrays.asList("/*"));

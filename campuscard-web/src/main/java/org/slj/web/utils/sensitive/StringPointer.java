@@ -17,11 +17,8 @@ public class StringPointer implements Serializable, CharSequence, Comparable<Str
 	private static final long serialVersionUID = 1L;
 
 	protected final char[] value;
-	
-	protected final int offset;
-	
 	protected final int length;
-	
+	private final int offset;
 	private int hash = 0;
 	
 	public StringPointer(String str){
@@ -91,10 +88,12 @@ public class StringPointer implements Serializable, CharSequence, Comparable<Str
 		}
 	}
 	
+	@Override
 	public int length(){
 		return length;
 	}
 	
+	@Override
 	public char charAt(int i){
 		return value[offset + i];
 	}
@@ -112,10 +111,12 @@ public class StringPointer implements Serializable, CharSequence, Comparable<Str
 		return substring(start, end);
 	}
 	
+	@Override
 	public String toString(){
 		return new String(value, offset, length);
 	}
 	
+	@Override
 	public int hashCode() {
 		int h = hash;
 		if (h == 0 && length > 0) {
@@ -127,6 +128,7 @@ public class StringPointer implements Serializable, CharSequence, Comparable<Str
 		return h;
 	}
 	
+	@Override
 	public boolean equals(Object anObject) {
         if (this == anObject) {
             return true;
@@ -134,8 +136,8 @@ public class StringPointer implements Serializable, CharSequence, Comparable<Str
         if (anObject instanceof StringPointer) {
         	StringPointer that = (StringPointer)anObject;
             if (length == that.length) {
-                char v1[] = this.value;
-                char v2[] = that.value;
+				char[] v1 = this.value;
+				char[] v2 = that.value;
                 for(int i = 0; i < this.length; i ++){
                 	if(v1[this.offset + i] != v2[that.offset + i]){
                 		return false;
@@ -152,8 +154,8 @@ public class StringPointer implements Serializable, CharSequence, Comparable<Str
 		int len1 = this.length;
         int len2 = that.length;
         int lim = Math.min(len1, len2);
-        char v1[] = this.value;
-        char v2[] = that.value;
+		char[] v1 = this.value;
+		char[] v2 = that.value;
 
         int k = 0;
         while (k < lim) {

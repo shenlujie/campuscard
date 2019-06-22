@@ -55,20 +55,6 @@ public class FrontUserStudentController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(FrontUserStudent frontUserStudent) {
-        MsgJson msgJson;
-        frontUserStudentService.saveModel(frontUserStudent);
-        return "";
-    }
-
-    @RequestMapping(value = "delete", method = RequestMethod.DELETE)
-    public String delete(@RequestParam Integer id) {
-        MsgJson msgJson;
-        frontUserStudentService.deleteById(id);
-        return "";
-    }
-
     @RequestMapping(value = "update", method = RequestMethod.PUT)
     public String update(FrontUserStudent frontUserStudent) {
         frontUserStudentService.update(frontUserStudent);
@@ -81,7 +67,7 @@ public class FrontUserStudentController {
         MsgJson msgJson;
         FrontUserStudent frontUserStudent = frontUserStudentService.findById(id);
         if (null == frontUserStudent) {
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         } else {
             msgJson = MsgJson.success(frontUserStudent);
         }

@@ -2,6 +2,8 @@ package org.slj.web.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.dto.UserOperation;
 import org.slj.enums.EmCode;
 import org.slj.service.UserOperationService;
@@ -22,6 +24,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/userOperation")
 public class UserOperationController {
+
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Autowired
     UserOperationService userOperationService;

@@ -1,5 +1,7 @@
 package org.slj.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slj.domain.CampusCardRule;
 import org.slj.enums.EmCode;
 import org.slj.service.CampusCardRuleService;
@@ -21,14 +23,13 @@ import java.util.List;
 @RequestMapping("/campusCardRule/")
 public class CampusCardRuleController {
 
+    /**
+     * 日志工具
+     */
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Autowired
     CampusCardRuleService campusCardRuleService;
-
-    @RequestMapping(value = "add",method = RequestMethod.POST)
-    public String add(CampusCardRule campusCardRule) {
-        campusCardRuleService.saveModel(campusCardRule);
-        return "";
-    }
 
     @RequestMapping(value = "delete",method = RequestMethod.DELETE)
     public String delete(@RequestParam Integer id) {
@@ -49,7 +50,7 @@ public class CampusCardRuleController {
         MsgJson msgJson;
         CampusCardRule campusCardRule = campusCardRuleService.findById(id);
         if (null == campusCardRule){
-            msgJson = MsgJson.not_found("无");
+            msgJson = MsgJson.notFound("无");
         }else {
             msgJson = MsgJson.success(campusCardRule);
         }
@@ -67,7 +68,7 @@ public class CampusCardRuleController {
                     .setCount(list.size())
                     .setObj(list);
         }else {
-            msgJson = MsgJson.not_found("没有数据");
+            msgJson = MsgJson.notFound("没有数据");
         }
 
         return msgJson.toJson();

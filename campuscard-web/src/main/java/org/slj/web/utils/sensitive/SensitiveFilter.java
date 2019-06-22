@@ -60,12 +60,16 @@ public class SensitiveFilter implements Serializable{
 	 * @param word
 	 */
 	public boolean put(String word){
+		//字符最小长度
+		int wordMinLength = 2;
+		//两个字符的正则
+		String wordMinLengthReq = "\\w\\w";
 		// 长度小于2的不加入
-		if(word == null || word.trim().length() < 2){
+		if(word == null || word.trim().length() < wordMinLength){
 			return false;
 		}
 		// 两个字符的不考虑
-		if(word.length() == 2 && word.matches("\\w\\w")){
+		if(word.length() == wordMinLength && word.matches(wordMinLengthReq)){
 			return false;
 		}
 		StringPointer sp = new StringPointer(word.trim());
@@ -117,6 +121,9 @@ public class SensitiveFilter implements Serializable{
 	 * @return 过滤后的句子 
 	 */
 	public String filter(String sentence, char replace){
+		//字符最小长度
+		int wordMinLength = 2;
+
 		// 先转换为StringPointer
 		StringPointer sp = new StringPointer(sentence);
 		
@@ -125,35 +132,18 @@ public class SensitiveFilter implements Serializable{
 		
 		// 匹配的起始位置
 		int i = 0;
-		while(i < sp.length - 2){
-			/*
-			 * 移动到下一个匹配位置的步进：
-			 * 如果未匹配为1，如果匹配是匹配的词长度
-			 */
+		while(i < sp.length - wordMinLength){
+			// 移动到下一个匹配位置的步进：如果未匹配为1，如果匹配是匹配的词长度
 			int step = 1;
 			// 计算此位置开始2个字符的hash
 			int hash = sp.nextTwoCharHash(i);
-			/*
-			 * 根据hash获取第一个节点，
-			 * 真正匹配的节点可能不是第一个，
-			 * 所以有后面的for循环。
-			 */
+			// 根据hash获取第一个节点，真正匹配的节点可能不是第一个，所以有后面的for循环。
 			SensitiveNode node = nodes[hash & (nodes.length - 1)];
-			/*
-			 * 如果非敏感词，node基本为null。
-			 * 这一步大幅提升效率 
-			 */
+			// 如果非敏感词，node基本为null。这一步大幅提升效率
 			if(node != null){
-				/*
-				 * 如果能拿到第一个节点，
-				 * 才计算mix（mix相同表示2个字符相同）。
-				 * mix的意义和HashMap先hash再equals的equals部分类似。
-				 */
+				// 如果能拿到第一个节点，才计算mix（mix相同表示2个字符相同）。mix的意义和HashMap先hash再equals的equals部分类似。
 				int mix = sp.nextTwoCharMix(i);
-				/*
-				 * 循环所有的节点，如果非敏感词，
-				 * mix相同的概率非常低，提高效率
-				 */
+				// 循环所有的节点，如果非敏感词，mix相同的概率非常低，提高效率
 				outer:
 				for(; node != null; node = node.next){
 					/*

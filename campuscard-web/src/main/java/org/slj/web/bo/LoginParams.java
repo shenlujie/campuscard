@@ -9,8 +9,14 @@ import java.io.Serializable;
  */
 public class LoginParams implements Serializable {
 
+    /**
+     * 学生学号（用户名）
+     */
     private String stNum;
 
+    /**
+     * 密码
+     */
     private String stPassword;
 
     public String getStNum() {
